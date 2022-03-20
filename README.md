@@ -1,4 +1,4 @@
-# Let's Play UNO!!!
+# Let's Play Checkers!!!
 
 ### Chisomnazu Oguh (chisomoguh@gmail.com)
 

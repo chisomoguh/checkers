@@ -4,3 +4,5 @@
 
 def main():
     print("Awesome!")
+
+main()

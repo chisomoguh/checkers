@@ -6,9 +6,6 @@ experiment with computer graphics in an object oriented fashion. It is
 written by John Zelle for use with the book "Python Programming: An
 Introduction to Computer Science" (Franklin, Beedle & Associates).
 
-THIS VERSION WAS MILDLY MODIFIED BY DAVID LIBEN-NOWELL (CARLETON
-COLLEGE), TO ADD A HOOK FOR HANDLING RIGHT CLICKS TOO.
-
 LICENSE: This is open-source software released under the terms of the
 GPL (http://www.gnu.org/licenses/gpl.html).
 
@@ -63,12 +60,7 @@ Programming: An Introduction to Computer Science" by John Zelle,
 published by Franklin, Beedle & Associates.  Also see
 http://mcsp.wartburg.edu/zelle/python for a quick reference"""
 
-__version__ = "5.1.DLN"
-
-# Version 5.1.DLN 11/04/2017
-#     * Added a hook for KeyRelease.  Thanks to Dylan Kempton.
-# Version 5.0.DLN 10/11/2017
-#     * Added a hook for right clicks.
+__version__ = "5.0"
 
 # Version 5 8/26/2016
 #     * update at bottom to fix MacOS issue causing askopenfile() to hang
@@ -230,9 +222,7 @@ class GraphWin(tk.Canvas):
         self.mouseX = None
         self.mouseY = None
         self.bind("<Button-1>", self._onClick)
-        self.bind("<Button-3>", self._onRightClick)      # DLN
         self.bind_all("<Key>", self._onKey)
-        self.bind_all("<KeyRelease>",self._onKeyRelease) # DLN/DK
         self.height = int(height)
         self.width = int(width)
         self.autoflush = autoflush
@@ -241,7 +231,6 @@ class GraphWin(tk.Canvas):
         self.closed = False
         master.lift()
         self.lastKey = ""
-        self.releasedKey = ""                            # DLN/DK          
         if autoflush: _root.update()
 
     def __repr__(self):
@@ -262,8 +251,6 @@ class GraphWin(tk.Canvas):
     def _onKey(self, evnt):
         self.lastKey = evnt.keysym
 
-    def _onKeyRelease(self, evnt):                       # DLN/DK
-        self.releasedKey = evnt.keysym 
 
     def setBackground(self, color):
         """Set background color of the window"""
@@ -367,17 +354,7 @@ class GraphWin(tk.Canvas):
         key = self.lastKey
         self.lastKey = ""
         return key
-
-    def checkKeyRelease(self):
-        """Return last key released (or None if no key released 
-           since last call)"""
-        if self.isClosed():
-            raise GraphicsError("checkKeyRelease in closed window")
-        self.update()
-        key = self.releasedKey
-        self.releasedKey = ""
-        return key
-     
+            
     def getHeight(self):
         """Return the height of the window"""
         return self.height
@@ -403,21 +380,12 @@ class GraphWin(tk.Canvas):
     def setMouseHandler(self, func):
         self._mouseCallback = func
         
-    def setMouseRightHandler(self, func):   # DLN
-        self._mouseRightCallback = func
-
     def _onClick(self, e):
         self.mouseX = e.x
         self.mouseY = e.y
         if self._mouseCallback:
             self._mouseCallback(Point(e.x, e.y))
 
-    def _onRightClick(self, e):             # DLN
-        self.mouseX = e.x
-        self.mouseY = e.y
-        if self._mouseRightCallback:
-            self._mouseRightCallback(Point(e.x, e.y)) 
-            
     def addItem(self, item):
         self.items.append(item)
 
